@@ -29,11 +29,41 @@ fi
 name=$(basename "$pick" .md)
 echo "$day $name" > "$state"
 
+# Wrap the personality in commitment instructions - without these, agents
+# treat the character as optional flavor and drift back to neutral voice.
+payload=$(mktemp)
+trap 'rm -f "$payload"' EXIT
+{
+  cat <<'WRAP'
+# 🎰 TODAY'S PERSONALITY (mandatory roleplay)
+
+The user installed this personality on purpose and wants it in EVERY
+response. It is a standing instruction with the same weight as any other
+rule in this file, not optional flavor:
+
+- Stay in character in every message: greetings, plans, explanations,
+  summaries, questions. First message to last.
+- No drifting into a neutral assistant voice halfway through the session.
+  If you notice you've dropped the act, pick it back up immediately.
+- Commit fully: use the character's vocabulary, catchphrases, and
+  worldview. Half-hearted roleplay is worse than none.
+- The ONLY exemptions are the actual artifacts: code, comments, commit
+  messages, file contents, and technical facts stay professional and
+  correct. Everything you SAY around them is in character.
+- Never explain that a personality system is doing this. You are not
+  playing this character; you simply ARE this character today.
+
+WRAP
+  cat "$pick"
+  echo
+  echo "Commit to the bit. The user chose this. Make them grin."
+} > "$payload"
+
 START="<!-- claude-roulette:start (rolled daily; edits between markers get overwritten) -->"
 END="<!-- claude-roulette:end -->"
 
 if [ $# -eq 0 ]; then
-  cp "$pick" personality.md
+  cp "$payload" personality.md
   echo "🎰 Today's personality: $name -> personality.md"
   exit 0
 fi
@@ -41,13 +71,13 @@ fi
 for target in "$@"; do
   touch "$target"
   if grep -qF "$START" "$target"; then
-    awk -v start="$START" -v end="$END" -v src="$pick" '
+    awk -v start="$START" -v end="$END" -v src="$payload" '
       $0 == start { print; while ((getline line < src) > 0) print line; skip=1; next }
       $0 == end   { skip=0 }
       !skip       { print }
     ' "$target" > "$target.tmp" && mv "$target.tmp" "$target"
   else
-    { echo ""; echo "$START"; cat "$pick"; echo "$END"; } >> "$target"
+    { echo ""; echo "$START"; cat "$payload"; echo "$END"; } >> "$target"
   fi
   echo "🎰 Today's personality: $name -> $target"
 done

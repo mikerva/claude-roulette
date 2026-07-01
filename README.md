@@ -52,7 +52,10 @@ hacker-90s 🖥️ · butler 🎩
 
 Drop a `.md` file in `personalities/` and it's in the rotation. Keep it
 short, keep it funny, and end it with a reminder that the personality is
-tone-only — the code still has to be good. PRs with new personalities
+tone-only — the code still has to be good. `roll.sh` automatically wraps
+every personality in commit-to-the-bit instructions (stay in character
+every message, never break kayfabe, artifacts stay professional), so your
+file only needs to describe the character. PRs with new personalities
 are extremely welcome.
 
 ## Notes
