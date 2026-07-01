@@ -64,8 +64,46 @@ printf "At what hour? [8] "
 read -r hour
 hour="${hour:-8}"
 
-line="0 $hour * * * $ROLL$args"
-{ crontab -l 2>/dev/null | grep -vF "$ROLL" || true; echo "$line"; } | crontab -
-echo
-echo "Installed: $line"
-echo "Done. New personality every day at $hour:00. Good luck out there."
+if [ "$(uname)" = "Darwin" ]; then
+  case "$PWD" in
+    "$HOME/Documents"*|"$HOME/Desktop"*|"$HOME/Downloads"*)
+      echo "⚠️  This folder is in a macOS-protected location, so the background"
+      echo "   job will be blocked (exit 126). Clone to ~/claude-roulette instead."
+      exit 1 ;;
+  esac
+  # launchd, not cron: it runs the job on wake if the Mac slept through the
+  # scheduled time, and RunAtLoad covers reboots. Date-seeding makes the
+  # extra firings harmless.
+  plist="$HOME/Library/LaunchAgents/com.claude-roulette.roll.plist"
+  mkdir -p "$(dirname "$plist")"
+  cat > "$plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.claude-roulette.roll</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>$ROLL</string>
+$(for t in ${targets[@]+"${targets[@]}"}; do printf '    <string>%s</string>\n' "$t"; done)
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>$hour</integer><key>Minute</key><integer>0</integer></dict>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>
+EOF
+  launchctl bootout "gui/$(id -u)" "$plist" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$plist"
+  # clean up any cron line left by older versions of this script
+  { crontab -l 2>/dev/null | grep -vF "$ROLL" || true; } | crontab - 2>/dev/null || true
+  echo
+  echo "Installed LaunchAgent: $plist"
+  echo "Rolls daily at $hour:00 — or on wake/login if the Mac slept through it."
+else
+  line="0 $hour * * * $ROLL$args"
+  { crontab -l 2>/dev/null | grep -vF "$ROLL" || true; echo "$line"; } | crontab -
+  echo
+  echo "Installed: $line"
+fi
+echo "Done. New personality every day. Good luck out there."
