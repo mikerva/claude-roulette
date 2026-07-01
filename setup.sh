@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Interactive setup: pick which instruction files to possess, roll the first
-# personality, and optionally install a daily cron job.
+# Interactive setup: possess your agents' GLOBAL instruction files (no dirty
+# git status, one personality everywhere), roll the first personality, and
+# optionally install a daily cron job.
 set -e
 cd "$(dirname "$0")"
 ROLL="$PWD/roll.sh"
@@ -8,13 +9,30 @@ ROLL="$PWD/roll.sh"
 echo "🎰 claude-roulette setup"
 echo
 
+# Global instruction files for agents that appear to be installed
+candidates=()
+maybe() { if [ -d "$(dirname "$1")" ]; then candidates+=("$1|$2"); fi; }
+maybe "$HOME/.claude/CLAUDE.md"           "Claude Code"
+maybe "$HOME/.codex/AGENTS.md"            "Codex"
+maybe "$HOME/.gemini/GEMINI.md"           "Gemini CLI"
+maybe "$HOME/.config/opencode/AGENTS.md"  "opencode"
+
 targets=()
+if [ ${#candidates[@]} -gt 0 ]; then
+  echo "Found these agents — their global instruction files apply to every"
+  echo "project, live outside git, and never show up as dirty:"
+  echo
+  for c in "${candidates[@]}"; do
+    path="${c%%|*}"; agent="${c##*|}"
+    printf "Possess %s (%s)? [Y/n] " "${path/#$HOME/~}" "$agent"
+    read -r yn
+    case "${yn:-y}" in [Yy]*|"") targets+=("$path") ;; esac
+  done
+  echo
+fi
+
 while :; do
-  if [ ${#targets[@]} -eq 0 ]; then
-    printf "Instruction file to possess (e.g. ~/myproject/AGENTS.md): "
-  else
-    printf "Another file? (enter to finish): "
-  fi
+  printf "Any other instruction file to possess? (enter to skip): "
   read -r f
   [ -z "$f" ] && break
   f="${f/#\~/$HOME}"
@@ -23,10 +41,10 @@ done
 
 echo
 if [ ${#targets[@]} -eq 0 ]; then
-  echo "No files given — using import mode instead."
+  echo "Nothing to possess — writing personality.md for import mode instead."
   "$ROLL"
   echo
-  echo "Add this line to the top of your CLAUDE.md (Claude Code only):"
+  echo "Add this line to the top of a CLAUDE.md (Claude Code only):"
   echo "  @$PWD/personality.md"
   args=""
 else
