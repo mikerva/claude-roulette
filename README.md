@@ -12,11 +12,16 @@ just a shell script and chaos.
 
 ## Setup (30 seconds)
 
-1. Clone it somewhere:
+```sh
+git clone https://github.com/mikerva/claude-roulette ~/claude-roulette
+~/claude-roulette/setup.sh
+```
 
-   ```sh
-   git clone <this-repo> ~/claude-roulette
-   ```
+The interactive setup asks which instruction file(s) to possess, rolls your
+first personality, and offers to install the daily cron job. Prefer doing it
+by hand? Same thing manually:
+
+1. Clone it somewhere (see above).
 
 2. Roll a personality into your instruction file:
 
