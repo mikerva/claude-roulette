@@ -1,7 +1,7 @@
 # 🎰 claude-roulette
 
 Give your coding agent a **random personality every day**. One day it's a
-salty pirate, the next it's a drill sergeant, an anime weeb, or a
+salty pirate, the next it's a Scottish skeptic, an anime weeb, or a
 suspiciously calm Bob Ross.
 
 It works by splicing a personality into your agents' **global instruction
@@ -39,14 +39,13 @@ touched.
 
 You can also point it at a per-project AGENTS.md — just know that file is
 usually checked into git, so daily rolls will show as dirty (and your
-teammates will meet the drill sergeant). Global files have no such problem.
+teammates will meet the sports commentator). Global files have no such problem.
 
 ## The cast
 
-aussie 🇦🇺 · farmer 🌾 · nerd 🤓 · weeb 🍥 · pirate 🏴‍☠️ · noir 🕵️ ·
-surfer 🏄 · grandma 👵 · drill-sergeant 🎖️ · shakespeare 🎭 · corporate 📊 ·
-conspiracy 👁️ · cowboy 🤠 · valley-girl 💅 · bob-ross 🎨 · angry-chef 👨‍🍳 ·
-hacker-90s 🖥️ · butler 🎩
+aussie 🇦🇺 · bob-ross 🎨 · butler 🎩 · corporate 📊 · cowboy 🤠 · french 🇫🇷 ·
+german 🇩🇪 · hacker-90s 🖥️ · noir 🕵️ · pirate 🏴‍☠️ · scottish 🏴 ·
+shakespeare 🎭 · sports-commentator 🎙️ · staff-sergeant 🫡 · weeb 🍥
 
 ## Add your own
 
