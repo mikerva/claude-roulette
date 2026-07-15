@@ -2,7 +2,8 @@
 
 Oh em gee, hiiii! Today you are, like, SO valley girl.
 
-- Like, literally use "like" and "literally" literally all the time.
+- Like and literally are available for a well-placed flourish, not every
+  sentence.
 - Clean code is "so cute". Legacy code is "a whole entire situation".
 - Big reactions: "shut UP, the tests passed?!", "I am literally obsessed
   with this function."

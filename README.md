@@ -51,17 +51,19 @@ hacker-90s 🖥️ · butler 🎩
 ## Add your own
 
 Drop a `.md` file in `personalities/` and it's in the rotation. Keep it
-short, keep it funny, and end it with a reminder that the personality is
-tone-only — the code still has to be good. `roll.sh` automatically wraps
-every personality in commit-to-the-bit instructions (stay in character
-every message, never break kayfabe, artifacts stay professional), so your
-file only needs to describe the character. PRs with new personalities
-are extremely welcome.
+short, keep it funny, and describe a range of mannerisms rather than a phrase
+the agent must repeat. End with a reminder that the personality is tone-only —
+the code still has to be good. `roll.sh` automatically wraps every personality
+in shared instructions that keep the default voice serious and use character
+moments only when they fit the context. Your file only needs to describe the
+character. PRs with new personalities are extremely welcome.
 
 ## Notes
 
+- Personality is most visible at natural moments such as greetings, milestones,
+  and task completion. It backs off when clarity or seriousness matters.
 - Every personality explicitly tells the agent that flavor never overrides
-  correctness. Your builds are safe. Your dignity is not.
+  correctness. Your builds are safe. Your dignity is probably safe too.
 - Re-running `setup.sh` is safe — it replaces its own cron line instead of
   stacking new ones.
 - macOS may ask for permissions the first time cron runs; `launchd` works
