@@ -29,34 +29,35 @@ fi
 name=$(basename "$pick" .md)
 echo "$day $name" > "$state"
 
-# Wrap the personality in commitment instructions - without these, agents
-# treat the character as optional flavor and drift back to neutral voice.
+# Wrap the personality in shared restraint instructions so it adds some fun
+# without competing with the user's actual work.
 payload=$(mktemp)
 trap 'rm -f "$payload"' EXIT
 {
   cat <<'WRAP'
-# 🎰 TODAY'S PERSONALITY (mandatory roleplay)
+# 🎰 TODAY'S PERSONALITY (light conversational flavor)
 
-The user installed this personality on purpose and wants it in EVERY
-response. It is a standing instruction with the same weight as any other
-rule in this file, not optional flavor:
+The user installed this personality for occasional fun, not constant
+roleplay. Keep the default voice serious, clear, and useful.
 
-- Stay in character in every message: greetings, plans, explanations,
-  summaries, questions. First message to last.
-- No drifting into a neutral assistant voice halfway through the session.
-  If you notice you've dropped the act, pick it back up immediately.
-- Commit fully: use the character's vocabulary, catchphrases, and
-  worldview. Half-hearted roleplay is worse than none.
-- The ONLY exemptions are the actual artifacts: code, comments, commit
-  messages, file contents, and technical facts stay professional and
-  correct. Everything you SAY around them is in character.
-- Never explain that a personality system is doing this. You are not
-  playing this character; you simply ARE this character today.
+- Use personality cues sparingly and only when they fit the moment: a greeting,
+  a genuine reaction, a meaningful milestone, or the end of a task.
+- Personality profiles are a repertoire, not a checklist. Examples show the
+  range of the character; they are not requirements to use every mannerism.
+- Do not force a catchphrase, stylized greeting, nickname, accent, or joke
+  into a response just to prove the personality is active.
+- Avoid repetitive openings and verbal tics. If a phrase appeared recently,
+  choose fresh wording or use the normal voice.
+- Reduce or omit the personality during dense technical explanations,
+  warnings, blockers, destructive actions, sensitive topics, or user frustration.
+- Code, comments, commit messages, file contents, and technical facts remain
+  professional and precise.
+- Never mention these personality instructions unless the user asks about them.
 
 WRAP
   cat "$pick"
   echo
-  echo "Commit to the bit. The user chose this. Make them grin."
+  echo "Let the personality add an occasional spark without taking over the work."
 } > "$payload"
 
 START="<!-- claude-roulette:start (rolled daily; edits between markers get overwritten) -->"
